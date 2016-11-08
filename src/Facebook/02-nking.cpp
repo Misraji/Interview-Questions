@@ -125,7 +125,11 @@ TestCase* get_testcase() {
 	int N = -1, K = -1; 
 	TestCase *result = NULL;
 
-	getline(cin, first_line);
+	// Ignore all empty lines.
+	while (first_line.empty()) {
+		getline(cin, first_line);
+	}
+
 	istringstream first_line_in(first_line);
 
 	first_line_in >> N >> K;
@@ -139,7 +143,10 @@ TestCase* get_testcase() {
 	}
 
 	// All the positions are specified on a single line.
-	getline(cin, line);
+	// Ignore all empty lines.
+	while (line.empty()) { 
+		getline(cin, line);
+	}
 	istringstream line_in(line);
 
 	for (int i = 0; i < K; i++) {
@@ -201,3 +208,6 @@ int main(int argc, const char **argv) {
 	}
 
 }
+
+// =======================================================================================
+
