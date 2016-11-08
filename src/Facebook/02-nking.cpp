@@ -46,6 +46,8 @@ struct TestCase {
 
 	private:
 		bool compute_rec(const int pos_index, int &result);
+		int compute_inc(); 
+
 		bool pos_ok(const int pos_index, const int new_pos);
 
 };
@@ -108,14 +110,65 @@ bool TestCase::compute_rec(const int pos_index, int &result) {
 	return false;
 }
 
+
+int TestCase::compute_inc() {
+
+	int result = 0;
+	int curr_king = K;
+
+	// This is the case when input has been completely specified.
+	if (K >= pos_in.size()) {
+		// TODO: Check this. Should we return 1 or 0??
+		return 1;
+	}
+
+	// Check all positions from K to N for pos_index king.
+	while (curr_king >= K) {
+
+		if (curr_king >= N) {
+			// We finished one solution.
+			result++;
+			curr_king--;
+
+			// Revert back current king position as far as possible.
+			// Note that we could have multiple kings in Nth position.
+			while ((curr_king >= K) && (pos_in[curr_king] >= N)) {
+				// Reset it back.
+				pos_in[curr_king] = -1;
+				curr_king--;
+			}
+		
+		} else {
+
+			// Lets try the next position of curr_king.
+			int curr_king_pos = ++pos_in[curr_king];
+		
+			if (curr_king_pos >= N) {
+
+				// We are out of options for this king. Retreat back.
+				pos_in[curr_king] = -1;
+				curr_king--;
+
+			} else if (pos_ok(curr_king, curr_king_pos)) {
+				// Ok. We have a valid position. Lets move on to the next
+				// king.
+				curr_king++;
+			}
+		}
+	}
+
+	return result;
+}
+
 int TestCase::compute_num_ways() {
 
 	int result = 0;
 
 	// Start computing positions for Kth index (we have positions from 0 ..
-	// K-1)
-	compute_rec(K, result);
+	// K-1), This is the recursive method.
+	// compute_rec(K, result);
 
+	result = compute_inc();
 	return result;
 }
 
