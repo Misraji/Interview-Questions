@@ -131,10 +131,18 @@ TestCase* get_testcase() {
 	first_line_in >> N >> K;
 	result = new TestCase(N, K);
 
-	for (int i = 0; i < K; i++) {
-		getline(cin, line);
+	// Check if any positions have been given.
+	// If no positions have been given, the next line belongs to a new test
+	// case.
+	if (K == 0) {
+		return result;
+	}
 
-		istringstream line_in(line);
+	// All the positions are specified on a single line.
+	getline(cin, line);
+	istringstream line_in(line);
+
+	for (int i = 0; i < K; i++) {
 		int curr_pos = 0;
 
 		line_in >> curr_pos;
@@ -152,6 +160,7 @@ void get_input(vector<TestCase*> &tests) {
 	getline(cin, line);
 	istringstream line_in(line);
 
+	line_in >> num_cases;
 	if (num_cases <= 0) {
 		throw runtime_error("No input cases");
 	}
@@ -180,7 +189,7 @@ int main(int argc, const char **argv) {
 
 		// TODO: Do that weird modulo if needed.
 		TestCase *curr_test = tests[i];
-		cout << curr_test->compute_num_ways();
+		cout << curr_test->compute_num_ways() << endl; 
 	}
 
 	// Free up all resources
