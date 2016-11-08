@@ -45,14 +45,14 @@ struct TestCase {
 		int compute_num_ways();
 
 	private:
-		bool compute_rec(vector<int> pos, const int pos_index, int &result);
-		bool pos_ok(const vector<int> &pos, const int pos_index, const int new_pos);
+		bool compute_rec(const int pos_index, int &result);
+		bool pos_ok(const int pos_index, const int new_pos);
 
 };
 
 
 // new_pos is the tentative position for pos_index.
-bool TestCase::pos_ok(const vector<int> &pos, const int pos_index, const int new_pos) {
+bool TestCase::pos_ok(const int pos_index, const int new_pos) {
 
 	// All positions are open for the first king.
 	if (pos_index == 0) {
@@ -63,7 +63,7 @@ bool TestCase::pos_ok(const vector<int> &pos, const int pos_index, const int new
 	
 	// Checking against all positions till (pos_index-1);
 	for (int i = 0; i < pos_index; i++) {
-		int curr_king_pos = pos[i];
+		int curr_king_pos = pos_in[i];
 
 		if (new_pos == curr_king_pos) {
 			return false;
@@ -71,7 +71,7 @@ bool TestCase::pos_ok(const vector<int> &pos, const int pos_index, const int new
 	}
 
 	// Special check for previous king. It should not share corner.
-	int prev_king_pos = pos[(pos_index - 1)] ;
+	int prev_king_pos = pos_in[(pos_index - 1)] ;
 
 	// Current position cannot be adjacent to previous king.
 	if (abs(new_pos - prev_king_pos) == 1) {
@@ -83,10 +83,10 @@ bool TestCase::pos_ok(const vector<int> &pos, const int pos_index, const int new
 
 // TODO: Remove the pos vector passed in as-value. Pass it in as reference
 // OR, dont pass it in at all.
-bool TestCase::compute_rec(vector<int> pos, const int pos_index, int &result) {
+bool TestCase::compute_rec(const int pos_index, int &result) {
 
 	// End of recursion. All kings placed correctly.
-	if (pos_index >= pos.size()) {
+	if (pos_index >= pos_in.size()) {
 		++result;
 		return true;
 	}
@@ -94,12 +94,14 @@ bool TestCase::compute_rec(vector<int> pos, const int pos_index, int &result) {
 	// Check all positions from 0 to N for pos_index king.
 	for(int curr_pos = 0; curr_pos < N; curr_pos++) {
 
-		if (pos_ok(pos, pos_index, curr_pos)) {
+		if (pos_ok(pos_index, curr_pos)) {
 
 				// Note the position of the latest king.
-				pos[pos_index] = curr_pos;
+				pos_in[pos_index] = curr_pos;
+				compute_rec((pos_index+1), result);
 
-				compute_rec(pos, (pos_index+1), result);
+				// Revert back the position of the latest kind.
+				pos_in[pos_index] = -1;
 		}
 	}
 
@@ -112,7 +114,7 @@ int TestCase::compute_num_ways() {
 
 	// Start computing positions for Kth index (we have positions from 0 ..
 	// K-1)
-	compute_rec(pos_in, K, result);
+	compute_rec(K, result);
 
 	return result;
 }
