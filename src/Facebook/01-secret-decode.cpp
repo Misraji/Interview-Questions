@@ -199,12 +199,16 @@ bool Solver::match_rec(vector<string> &secret_line, int i , map<char, char> &sol
 	}
 
 	string &curr_secret = secret_line[i];
+
+	if (dict.count(curr_secret.size()) <= 0) {
+		throw runtime_error("No matching dictionary word found.");
+	}
 	vector<string> &possible_words = dict[curr_secret.size()];
 
 	// Grab all possible words that can match and try them.
 	for (int j = 0; j < possible_words.size(); j++) {
 
-		string &curr_word = possible_words[i];
+		string &curr_word = possible_words[j];
 
 		// Generating a copy of the solution for testing word matching.
 		map<char, char> tmp_solution(solution);
@@ -223,6 +227,11 @@ bool Solver::match_rec(vector<string> &secret_line, int i , map<char, char> &sol
 }
 
 void Solver::match(vector<string> &secret_line) {
+
+	if (secret_line.size() == 0) {
+		return;
+	}
+
 	map<char, char> solution;
 	bool success  = match_rec(secret_line, 0, solution);
 
@@ -245,6 +254,20 @@ int main(int argc, const char **argv) {
 	for (int i = 0; i < secrets.size(); i++) {
 		tmp.match(secrets[i]);
 	}
+
+	/*
 	cout << "dict = " << dict.size() << endl;
+	for(auto itr = dict.begin(); itr != dict.end(); itr++) {
+		int size = itr->first;
+		vector<string> &words = itr->second;
+
+		cout << "size = " << size << " : " ;
+		for (int k = 0; k < words.size(); k++) {
+			cout << words[k] << ", ";
+		}
+		cout << endl;
+	}
+
 	cout << "secrets = " << secrets.size() << endl;
+	*/
 }
