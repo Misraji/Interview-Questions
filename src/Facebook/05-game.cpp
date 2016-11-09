@@ -80,10 +80,13 @@ int num_bits_set(int val) {
 
 int num_moves(const int start_val) {
 
+	cout << "start_val = " << start_val << endl;
+
 	if (start_val == 0) {
 		throw runtime_error("start val must be > 0");
 	}
 
+	// Actual algorithm variables.
 	int moves = 0;
 	int curr_val = start_val;
 	int curr_num_bits = num_bits_set(start_val);
@@ -100,6 +103,12 @@ int num_moves(const int start_val) {
 	// Reducing power by 1 to make it less than start_val;
 	two_power = two_power >> 1;
 
+	cout << "valid_k = ";
+	for (int i=0; i < valid_k.size(); i++) {
+		cout << valid_k[i] << ",";
+	}
+	cout << endl;
+
 	// TODO: Is there a different loop break condition??
 	for(int i= valid_k.size() - 1; i >= 0; i--) {
 
@@ -108,10 +117,21 @@ int num_moves(const int start_val) {
 		int tmp_val = curr_val - two_power;
 		int tmp_num_bits = num_bits_set(tmp_val);
 
+		if (tmp_val <= 0) {
+			break;
+		}
+
 		if (tmp_num_bits == curr_num_bits ) {
 			// tmp_val has same beauty as before.
 			curr_val = tmp_val;
 			moves++;
+
+			// Recalculate i
+			i = 0;
+			while (valid_k[i] < curr_val) {
+				i++;
+			}
+			i--;
 		}
 	}
 
