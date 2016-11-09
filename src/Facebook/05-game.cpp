@@ -80,8 +80,6 @@ int num_bits_set(int val) {
 
 int num_moves(const int start_val) {
 
-	// cout << "start_val = " << start_val << endl;
-
 	if (start_val == 0) {
 		throw runtime_error("start val must be > 0");
 	}
@@ -106,18 +104,13 @@ int num_moves(const int start_val) {
 	}
 
 	// Reducing power by 1 to make it less than start_val;
+	// This is actually dead-code.
 	two_power = two_power >> 1;
-	
-	/*
-	cout << "valid_k = ";
-	for (int i=0; i < valid_k.size(); i++) {
-		cout << valid_k[i] << ",";
-	}
-	cout << endl;
-	*/
 
 	if (start_val_power == false) {
-		// TODO: Is there a different loop break condition??
+		// When start_val is NOT a power of 2, the optimal strategy is to search
+		// for lowest powers of 2. 
+		
 		int max_k_index = valid_k.size()-1;
 		for(int i= 0; i <= max_k_index; i++) {
 
@@ -151,6 +144,9 @@ int num_moves(const int start_val) {
 		}
 
 	} else {
+
+		// When start_val is a power of 2, the optimal strategy is to search
+		// for highest powers of 2.
 
 		// TODO: Is there a different loop break condition??
 		for(int i= valid_k.size()-1; i >= 0; i--) {
