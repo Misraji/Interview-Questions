@@ -80,7 +80,7 @@ int num_bits_set(int val) {
 
 int num_moves(const int start_val) {
 
-	cout << "start_val = " << start_val << endl;
+	// cout << "start_val = " << start_val << endl;
 
 	if (start_val == 0) {
 		throw runtime_error("start val must be > 0");
@@ -94,29 +94,39 @@ int num_moves(const int start_val) {
 	// First determine power k;
 	int two_power = 1;
 	vector<int> valid_k; 
+	bool start_val_power = false;
 
 	while (two_power < start_val) {
 		valid_k.push_back(two_power);
 		two_power = two_power << 1;
 	}
 
+	if (two_power == start_val) {
+		start_val_power = true;
+	}
+
 	// Reducing power by 1 to make it less than start_val;
 	two_power = two_power >> 1;
-
+	
+	/*
 	cout << "valid_k = ";
 	for (int i=0; i < valid_k.size(); i++) {
 		cout << valid_k[i] << ",";
 	}
 	cout << endl;
+	*/
 
+	if (start_val_power == false) {
 	// TODO: Is there a different loop break condition??
-	for(int i= valid_k.size() - 1; i >= 0; i--) {
+	int max_k_index = valid_k.size()-1;
+	for(int i= 0; i <= max_k_index; i++) {
 
 		int two_power = valid_k[i];
 		// n - 2^k
 		int tmp_val = curr_val - two_power;
 		int tmp_num_bits = num_bits_set(tmp_val);
 
+		// Safety condition.
 		if (tmp_val <= 0) {
 			break;
 		}
@@ -126,13 +136,40 @@ int num_moves(const int start_val) {
 			curr_val = tmp_val;
 			moves++;
 
-			// Recalculate i
-			i = 0;
-			while (valid_k[i] < curr_val) {
-				i++;
+			// Recalculate new max_k_index;
+			max_k_index = 0;
+			while (valid_k[max_k_index] < curr_val) {
+				max_k_index++;
 			}
-			i--;
+			max_k_index--;
+
+			// Reset counter
+			i = 0;
 		}
+	}
+
+	} else {
+
+	// TODO: Is there a different loop break condition??
+	for(int i= valid_k.size()-1; i >= 0; i--) {
+
+		int two_power = valid_k[i];
+		// n - 2^k
+		int tmp_val = curr_val - two_power;
+		int tmp_num_bits = num_bits_set(tmp_val);
+
+		// Safety condition.
+		if (tmp_val <= 0) {
+			break;
+		}
+
+		if (tmp_num_bits == curr_num_bits ) {
+			// tmp_val has same beauty as before.
+			curr_val = tmp_val;
+			moves++;
+		}
+	}
+
 	}
 
 	return moves;
