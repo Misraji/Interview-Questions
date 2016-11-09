@@ -117,59 +117,58 @@ int num_moves(const int start_val) {
 	*/
 
 	if (start_val_power == false) {
-	// TODO: Is there a different loop break condition??
-	int max_k_index = valid_k.size()-1;
-	for(int i= 0; i <= max_k_index; i++) {
+		// TODO: Is there a different loop break condition??
+		int max_k_index = valid_k.size()-1;
+		for(int i= 0; i <= max_k_index; i++) {
 
-		int two_power = valid_k[i];
-		// n - 2^k
-		int tmp_val = curr_val - two_power;
-		int tmp_num_bits = num_bits_set(tmp_val);
+			int two_power = valid_k[i];
+			// n - 2^k
+			int tmp_val = curr_val - two_power;
+			int tmp_num_bits = num_bits_set(tmp_val);
 
-		// Safety condition.
-		if (tmp_val <= 0) {
-			break;
-		}
-
-		if (tmp_num_bits == curr_num_bits ) {
-			// tmp_val has same beauty as before.
-			curr_val = tmp_val;
-			moves++;
-
-			// Recalculate new max_k_index;
-			max_k_index = 0;
-			while (valid_k[max_k_index] < curr_val) {
-				max_k_index++;
+			// Safety condition.
+			if (tmp_val <= 0) {
+				break;
 			}
-			max_k_index--;
 
-			// Reset counter
-			i = 0;
+			if (tmp_num_bits == curr_num_bits ) {
+				// tmp_val has same beauty as before.
+				curr_val = tmp_val;
+				moves++;
+
+				// Recalculate new max_k_index;
+				max_k_index = 0;
+				while (valid_k[max_k_index] < curr_val) {
+					max_k_index++;
+				}
+				max_k_index--;
+
+				// Reset counter
+				i = 0;
+			}
 		}
-	}
 
 	} else {
 
-	// TODO: Is there a different loop break condition??
-	for(int i= valid_k.size()-1; i >= 0; i--) {
+		// TODO: Is there a different loop break condition??
+		for(int i= valid_k.size()-1; i >= 0; i--) {
 
-		int two_power = valid_k[i];
-		// n - 2^k
-		int tmp_val = curr_val - two_power;
-		int tmp_num_bits = num_bits_set(tmp_val);
+			int two_power = valid_k[i];
+			// n - 2^k
+			int tmp_val = curr_val - two_power;
+			int tmp_num_bits = num_bits_set(tmp_val);
 
-		// Safety condition.
-		if (tmp_val <= 0) {
-			break;
+			// Safety condition.
+			if (tmp_val <= 0) {
+				break;
+			}
+
+			if (tmp_num_bits == curr_num_bits ) {
+				// tmp_val has same beauty as before.
+				curr_val = tmp_val;
+				moves++;
+			}
 		}
-
-		if (tmp_num_bits == curr_num_bits ) {
-			// tmp_val has same beauty as before.
-			curr_val = tmp_val;
-			moves++;
-		}
-	}
-
 	}
 
 	return moves;
