@@ -65,15 +65,17 @@ int get_substr(map<string,int> &words, int num_words, string &line) {
 
 	int word_size = words.begin()->first.size();
 
+    // start_indexes contains all those index positions that contain one single word from the 
+    // words list.
 	vector<int> start_indexes;
 
 	// Maintaining a record of all starting indexes of interest.
 	for(int i=0; i < line.size(); i++) {
+        // Grab a substring of max size word_size;
 		string curr_sub_str = line.substr(i, word_size);
 
 		if (words.count(curr_sub_str) > 0) {
 			start_indexes.push_back(i);
-			// cout << "starting index " << i << endl;
 		}
 	}
 
@@ -82,15 +84,10 @@ int get_substr(map<string,int> &words, int num_words, string &line) {
 	vector<int> full_length_indexes;
 	set<int> all_indexes( start_indexes.begin(), start_indexes.end());
 
-	// cout << "start_indexes.size() = " << start_indexes.size() << endl;
-
 	for (int i = 0; i <= (start_indexes.size() - num_words); i++) {
-
 
 		int curr_index = start_indexes[i];
 		all_indexes.erase(curr_index);
-
-		// cout << "Starting with index " <<  curr_index << endl;
 		
 		int j = 1;
 		for( ; j < num_words; j++) {
@@ -100,7 +97,6 @@ int get_substr(map<string,int> &words, int num_words, string &line) {
 			// check to see if jth index is in all_indexes.
 			// If not, then we break out.
 			if (all_indexes.count(expected_index) <= 0) {
-				// cout << "Did not find expected index " << expected_index << endl;
 				break;
 			}
 		}
@@ -108,7 +104,6 @@ int get_substr(map<string,int> &words, int num_words, string &line) {
 		// Ok. j has full count. start_indexes should be considered further
 		if (j >=  num_words) {
 			full_length_indexes.push_back(start_indexes[i]);
-			// cout << "full_length_indexes " << start_indexes[i] << endl;
 		}
 	}
 
@@ -118,8 +113,12 @@ int get_substr(map<string,int> &words, int num_words, string &line) {
 
 	for(int i = 0; i < full_length_indexes.size(); i++) {
 		
-		int curr_index = full_length_indexes[i];
+        // tmp_words is a list of all the words that we want in the substring starting 
+        // at full_length_indexes[i]. By the end of processing tmp_words must be empty.
+		int curr_index = full_length_indexes[i];        
 		map<string, int> tmp_words(words);
+        
+        // j is offset for all words to be consumed.
 		int j = 0;
 
 		for(j = 0; j < num_words; j++) {
@@ -137,9 +136,14 @@ int get_substr(map<string,int> &words, int num_words, string &line) {
 			tmp_words[jth_word]--;
 		}
 
-		// Since the string is guaranteed to exist only once, we return back
-		// the index immediately.
+        // Check if number of words consumed == num_words
 		if (j >= num_words) {
+            
+            // At this point, there were num_words in the sub-string, all occuring in 
+            // tmp_words for exactly the right count. Thus we have our solution.
+
+            // Since the string is guaranteed to exist only once, we return back
+            // the index immediately.
 			return curr_index;
 		}
 	}
@@ -157,10 +161,8 @@ int main(int argc, const char **argv) {
 	string line;
 
 	get_input(words, num_words, line);
-	// cout  << "num_words =  " << num_words << endl;
 
 	cout << get_substr(words, num_words, line) << endl;
 }
 
 // =======================================================================================
-
