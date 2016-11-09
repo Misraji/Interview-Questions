@@ -138,7 +138,9 @@ int num_moves(const int start_val) {
 
 				// Recalculate new max_k_index;
 				max_k_index = 0;
-				while (valid_k[max_k_index] < curr_val) {
+				while ((max_k_index < valid_k.size()) && 
+						(valid_k[max_k_index] < curr_val)
+					  ) {
 					max_k_index++;
 				}
 				max_k_index--;
